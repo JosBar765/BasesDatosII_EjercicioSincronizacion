@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    padding: 40px;
+    color: #1f2937;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #111827;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #374151;
+}
+
+hr {
+    margin: 35px 0;
+    border: none;
+    height: 1px;
+    background: #d1d5db;
+}
+
+.conexion-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.conexion-container button {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.conexion-container button:hover {
+    transform: translateY(-2px);
+    background: #1d4ed8;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.buttons button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+button[type="submit"] {
+    background: #16a34a;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background: #15803d;
+}
+
+#btnActualizar {
+    background: #f59e0b;
+    color: white;
+}
+
+#btnActualizar:hover {
+    background: #d97706;
+}
+
+#btnEliminar {
+    background: #dc2626;
+    color: white;
+}
+
+#btnEliminar:hover {
+    background: #b91c1c;
+}
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 20px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+}
