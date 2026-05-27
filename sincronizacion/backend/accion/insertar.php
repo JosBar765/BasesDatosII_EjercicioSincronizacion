@@ -45,6 +45,36 @@ try {
         ? "Empleado"
         : '"Empleado"';
 
+
+    //
+    // VALIDAR SI EL DPI EXISTE O NO
+    //
+    $sqlCheck = "
+    SELECT COUNT(*) 
+    FROM $nombre_tabla
+    WHERE dpi = :dpi
+    ";
+
+    $stmtCheck = $db->prepare($sqlCheck);
+
+    $stmtCheck->execute([
+        ":dpi" => $data["dpi"]
+    ]);
+
+    if ($stmtCheck->fetchColumn() > 0) {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "El DPI ya existe"
+        ]);
+
+        exit;
+    }
+
+    //
+    // INSERTAR
+    //
+
     $sql = "
     INSERT INTO $nombre_tabla (
         dpi,
