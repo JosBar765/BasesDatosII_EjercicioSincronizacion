@@ -61,6 +61,7 @@ try {
         bonificacion = :bonificacion,
         fecha_modificacion = NOW()
     WHERE dpi = :dpi
+    AND eliminado = false
     ";
 
     $stmt = $db->prepare($sql);
