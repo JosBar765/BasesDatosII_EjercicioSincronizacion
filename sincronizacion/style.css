@@ -23,10 +23,52 @@ h2 {
 }
 
 hr {
-    margin: 35px 0;
+    margin: 15px 0;
     border: none;
     height: 1px;
     background: #d1d5db;
+}
+
+.topbar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+}
+
+.topbar-left h1 {
+
+    margin: 0;
+
+}
+
+.topbar-right {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 12px;
+
+}
+
+.conexion-container {
+
+    display: flex;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
 }
 
 .conexion-container {
@@ -54,12 +96,17 @@ hr {
 }
 
 .form-container {
-    max-width: 800px;
-    margin: auto;
+
+    width: 100%;
+
     background: white;
+
     padding: 30px;
+
     border-radius: 14px;
+
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
 }
 
 form {
@@ -150,20 +197,13 @@ button[type="submit"]:hover {
 .connection-badge {
 
     width: fit-content;
-    margin: 0 auto 25px auto;
-
     padding: 12px 18px;
-
     border-radius: 999px;
-
     background: #6b7280;
     color: white;
-
     font-weight: bold;
     font-size: 14px;
-
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
     transition: 0.2s ease;
 
 }
@@ -197,10 +237,14 @@ button[type="submit"]:hover {
 .content-layout {
 
     display: grid;
-    grid-template-columns: 1fr 420px;
+
+    grid-template-columns: 1fr 1fr;
+
     gap: 30px;
 
     align-items: start;
+
+    height: calc(100vh - 220px);
 
 }
 

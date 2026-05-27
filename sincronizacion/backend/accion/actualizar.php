@@ -9,7 +9,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once("../conexion/database.php");
-require_once("../bitacora/bitacora.php");
 
 try {
 
@@ -81,11 +80,6 @@ try {
 
     ]);
 
-    escribirBitacora(
-        "UPDATE|" .
-            $data["dpi"] . "|" .
-            date("Y-m-d H:i:s")
-    );
 
     echo json_encode([
         "success" => true,
