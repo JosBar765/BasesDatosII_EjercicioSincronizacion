@@ -96,7 +96,7 @@ try {
             $postgresRow = $postgresMap[$dpi];
 
             if (
-                strtotime($mysqlRow["fecha_modificacion"]) >
+                strtotime($mysqlRow["fecha_modificacion"]) >=
                 strtotime($postgresRow["fecha_modificacion"])
             ) {
 
@@ -179,7 +179,7 @@ try {
             $mysqlRow = $mysqlMap[$dpi];
 
             if (
-                strtotime($postgresRow["fecha_modificacion"]) >
+                strtotime($postgresRow["fecha_modificacion"]) >=
                 strtotime($mysqlRow["fecha_modificacion"])
             ) {
 
@@ -204,6 +204,79 @@ try {
 
                 $stmt->execute($postgresRow);
             }
+        }
+    }
+
+    //
+    // RECARGAR DATOS ACTUALIZADOS
+    //
+
+    $mysqlData = $mysql
+        ->query("SELECT * FROM $tablaMysql")
+        ->fetchAll(PDO::FETCH_ASSOC);
+
+    $postgresData = $postgres
+        ->query("SELECT * FROM $tablaPostgres")
+        ->fetchAll(PDO::FETCH_ASSOC);
+
+    $mysqlMap = [];
+    $postgresMap = [];
+
+    foreach ($mysqlData as $row) {
+        $mysqlMap[$row["dpi"]] = $row;
+    }
+
+    foreach ($postgresData as $row) {
+        $postgresMap[$row["dpi"]] = $row;
+    }
+
+    //
+    // ELIMINAR FÍSICAMENTE
+    // SI EN AMBAS DBS ESTÁ ELIMINADO
+    //
+
+    foreach ($mysqlMap as $dpi => $mysqlRow) {
+
+        if (!isset($postgresMap[$dpi])) {
+            continue;
+        }
+
+        $postgresRow = $postgresMap[$dpi];
+
+        if (
+            (bool)$mysqlRow["eliminado"] === true &&
+            (bool)$postgresRow["eliminado"] === true
+        ) {
+
+            //
+            // DELETE MYSQL
+            //
+
+            $sqlMysql = "
+            DELETE FROM $tablaMysql
+            WHERE dpi = :dpi
+            ";
+
+            $stmtMysql = $mysql->prepare($sqlMysql);
+
+            $stmtMysql->execute([
+                ":dpi" => $dpi
+            ]);
+
+            //
+            // DELETE POSTGRES
+            //
+
+            $sqlPostgres = "
+            DELETE FROM $tablaPostgres
+            WHERE dpi = :dpi
+            ";
+
+            $stmtPostgres = $postgres->prepare($sqlPostgres);
+
+            $stmtPostgres->execute([
+                ":dpi" => $dpi
+            ]);
         }
     }
 
