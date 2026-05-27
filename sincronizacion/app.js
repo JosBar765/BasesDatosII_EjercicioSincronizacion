@@ -10,9 +10,9 @@ function toast(icon, title) {
     Swal.fire({
 
         toast: true,
-        position: "bottom-end",
+        position: "top-start",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1500,
         timerProgressBar: true,
 
         icon,
