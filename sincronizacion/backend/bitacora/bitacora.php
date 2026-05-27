@@ -3,7 +3,7 @@
 function escribirBitacora($mensaje)
 {
 
-    $archivo = fopen("../../bitacora.txt", "a");
+    $archivo = fopen("../../bitacora/bitacora.txt", "a");
 
     fwrite($archivo, $mensaje . PHP_EOL);
 

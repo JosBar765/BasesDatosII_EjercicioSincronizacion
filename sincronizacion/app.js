@@ -1,18 +1,122 @@
+const badge = document.getElementById("connectionBadge");
+
+
+//
+// TOAST
+//
+
+function toast(icon, title) {
+
+    Swal.fire({
+
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+
+        icon,
+        title
+
+    });
+
+}
+
+
+//
+// ACTUALIZAR BADGE
+//
+
+function setConnection(name) {
+
+    badge.classList.remove("mysql");
+    badge.classList.remove("postgres");
+
+    if (name === "mysql") {
+
+        badge.classList.add("mysql");
+        badge.innerText = "Conectado a MySQL";
+
+    } else if (name === "postgres") {
+
+        badge.classList.add("postgres");
+        badge.innerText = "Conectado a PostgreSQL";
+
+    } else {
+
+        badge.innerText = "Sin conexión";
+
+    }
+
+}
+
+
 //
 // CONEXIONES
 //
 
 document.getElementById("btnMysql").addEventListener("click", async () => {
 
-    await fetch("backend/conexion/mysql.php");
+    try {
+
+        const response = await fetch("backend/conexion/mysql.php");
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            setConnection("mysql");
+
+            toast(
+                "success",
+                "Conexión exitosa a MySQL"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error conectando a MySQL"
+        );
+
+    }
 
 });
+
+
 
 document.getElementById("btnPostgres").addEventListener("click", async () => {
 
-    await fetch("backend/conexion/postgres.php");
+    try {
+
+        const response = await fetch("backend/conexion/postgres.php");
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            setConnection("postgres");
+
+            toast(
+                "success",
+                "Conexión exitosa a PostgreSQL"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error conectando a PostgreSQL"
+        );
+
+    }
 
 });
+
 
 
 //
@@ -21,9 +125,32 @@ document.getElementById("btnPostgres").addEventListener("click", async () => {
 
 document.getElementById("btnSync").addEventListener("click", async () => {
 
-    await fetch("backend/sync/sincronizar.php");
+    try {
+
+        const response = await fetch("backend/sync/sincronizar.php");
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            toast(
+                "success",
+                "Bases de datos sincronizadas"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error al sincronizar"
+        );
+
+    }
 
 });
+
 
 
 //
@@ -49,19 +176,44 @@ document.getElementById("empleadoForm").addEventListener("submit", async (e) => 
 
     };
 
-    await fetch("backend/accion/insertar.php", {
+    try {
 
-        method: "POST",
+        const response = await fetch("backend/accion/insertar.php", {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            method: "POST",
 
-        body: JSON.stringify(data)
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    });
+            body: JSON.stringify(data)
+
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            toast(
+                "success",
+                "Empleado insertado y bitácora actualizada"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error al insertar"
+        );
+
+        console.error(error);
+
+    }
 
 });
+
 
 
 //
@@ -85,19 +237,42 @@ document.getElementById("btnActualizar").addEventListener("click", async () => {
 
     };
 
-    await fetch("backend/accion/actualizar.php", {
+    try {
 
-        method: "PUT",
+        const response = await fetch("backend/accion/actualizar.php", {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            method: "PUT",
 
-        body: JSON.stringify(data)
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    });
+            body: JSON.stringify(data)
+
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            toast(
+                "success",
+                "Empleado actualizado y bitácora actualizada"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error al actualizar"
+        );
+
+    }
 
 });
+
 
 
 //
@@ -108,16 +283,38 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
 
     const dpi = document.getElementById("dpi").value;
 
-    await fetch("backend/accion/eliminar.php", {
+    try {
 
-        method: "DELETE",
+        const response = await fetch("backend/accion/eliminar.php", {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            method: "DELETE",
 
-        body: JSON.stringify({ dpi })
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    });
+            body: JSON.stringify({ dpi })
+
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            toast(
+                "success",
+                "Empleado eliminado y bitácora actualizada"
+            );
+
+        }
+
+    } catch (error) {
+
+        toast(
+            "error",
+            "Error al eliminar"
+        );
+
+    }
 
 });

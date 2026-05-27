@@ -4,7 +4,7 @@ session_start();
 
 require_once("../config/mysql.php");
 require_once("../config/postgres.php");
-require_once("../utils/bitacora.php");
+require_once("../bitacora/bitacora.php");
 
 $data = json_decode(file_get_contents("php://input"), true);
 

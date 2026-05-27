@@ -7,11 +7,18 @@
     <title>Sincronización DB</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
 
     <h1>Sincronización MySQL - PostgreSQL</h1>
+
+    <!-- BADGE -->
+    <div class="connection-badge" id="connectionBadge">
+        Sin conexión
+    </div>
 
     <!-- CONEXIONES -->
     <section class="conexion-container">
@@ -41,23 +48,35 @@
 
             <input type="text" id="dpi" placeholder="DPI" maxlength="13">
 
-            <input type="text" id="primer_nombre" placeholder="Primer Nombre">
+            <div class="form-row">
 
-            <input type="text" id="segundo_nombre" placeholder="Segundo Nombre">
+                <input type="text" id="primer_nombre" placeholder="Primer Nombre">
 
-            <input type="text" id="primer_apellido" placeholder="Primer Apellido">
+                <input type="text" id="segundo_nombre" placeholder="Segundo Nombre">
 
-            <input type="text" id="segundo_apellido" placeholder="Segundo Apellido">
+            </div>
+
+            <div class="form-row">
+
+                <input type="text" id="primer_apellido" placeholder="Primer Apellido">
+
+                <input type="text" id="segundo_apellido" placeholder="Segundo Apellido">
+
+            </div>
 
             <textarea id="direccion" placeholder="Dirección"></textarea>
 
-            <input type="text" id="telefono_casa" placeholder="Teléfono Casa" maxlength="8">
+            <div class="form-row">
+                <input type="text" id="telefono_casa" placeholder="Teléfono Casa" maxlength="8">
 
-            <input type="text" id="telefono_movil" placeholder="Teléfono Móvil" maxlength="8">
+                <input type="text" id="telefono_movil" placeholder="Teléfono Móvil" maxlength="8">
+            </div>
 
-            <input type="number" step="0.01" id="salario_base" placeholder="Salario Base">
+            <div class="form-row">
+                <input type="number" step="0.01" id="salario_base" placeholder="Salario Base">
 
-            <input type="number" id="bonificacion" placeholder="Bonificación">
+                <input type="number" id="bonificacion" placeholder="Bonificación">
+            </div>
 
             <div class="buttons">
 
