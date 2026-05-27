@@ -245,6 +245,20 @@ document.getElementById("btnSync").addEventListener("click", async () => {
 
     try {
 
+        if (
+            !badge.classList.contains("mysql") &&
+            !badge.classList.contains("postgres")
+        ) {
+
+            toast(
+                "warning",
+                "Debe conectarse a una base de datos"
+            );
+
+            return;
+
+        }
+
         const response = await fetch("backend/sync/sincronizar.php");
 
         const text = await response.text();
