@@ -193,3 +193,120 @@ button[type="submit"]:hover {
     }
 
 }
+
+.content-layout {
+
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 30px;
+
+    align-items: start;
+
+}
+
+.table-container {
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+    height: 720px;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+#searchInput {
+
+    margin-bottom: 18px;
+
+}
+
+.table-scroll {
+
+    overflow-y: auto;
+
+    flex: 1;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+thead {
+
+    position: sticky;
+    top: 0;
+
+    background: white;
+
+    z-index: 10;
+
+}
+
+th {
+
+    background: #2563eb;
+    color: white;
+
+    padding: 14px;
+
+    text-align: left;
+
+    font-size: 14px;
+
+}
+
+td {
+
+    padding: 14px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 14px;
+
+}
+
+tbody tr {
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+}
+
+tbody tr:hover {
+
+    background: #eff6ff;
+
+}
+
+@media (max-width: 1200px) {
+
+    .content-layout {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .table-container {
+
+        height: 500px;
+
+    }
+
+}

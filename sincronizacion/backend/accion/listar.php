@@ -9,24 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once("../conexion/database.php");
-require_once("../bitacora/bitacora.php");
 
 try {
-
-    $data = json_decode(
-        file_get_contents("php://input"),
-        true
-    );
-
-    if ($data === null) {
-
-        echo json_encode([
-            "success" => false,
-            "message" => "JSON inválido"
-        ]);
-
-        exit;
-    }
 
     $conexion = $_SESSION["conexion_actual"] ?? null;
 
@@ -49,28 +33,33 @@ try {
         : '"Empleado"';
 
     $sql = "
-    UPDATE $nombre_tabla
-    SET
-        eliminado = true,
-        fecha_modificacion = NOW()
-    WHERE dpi = :dpi
+        SELECT
+            dpi,
+            primer_nombre,
+            segundo_nombre,
+            primer_apellido,
+            segundo_apellido,
+            direccion,
+            telefono_casa,
+            telefono_movil,
+            salario_base,
+            bonificacion,
+            fecha_modificacion,
+            eliminado
+        FROM $nombre_tabla
+        WHERE eliminado = false
+        ORDER BY fecha_modificacion DESC
     ";
 
     $stmt = $db->prepare($sql);
 
-    $stmt->execute([
-        ":dpi" => $data["dpi"]
-    ]);
+    $stmt->execute();
 
-    escribirBitacora(
-        "DELETE|" .
-            $data["dpi"] . "|" .
-            date("Y-m-d H:i:s")
-    );
+    $empleados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         "success" => true,
-        "message" => "Empleado eliminado"
+        "data" => $empleados
     ]);
 } catch (PDOException $e) {
 

@@ -39,65 +39,109 @@
 
     <hr>
 
-    <!-- FORMULARIO -->
-    <section class="form-container">
+    <hr>
 
-        <h2>Empleado</h2>
+    <section class="content-layout">
 
-        <form id="empleadoForm">
+        <!-- FORMULARIO -->
+        <section class="form-container">
 
-            <input type="text" id="dpi" placeholder="DPI" maxlength="13">
+            <h2>Empleado</h2>
 
-            <div class="form-row">
+            <form id="empleadoForm">
 
-                <input type="text" id="primer_nombre" placeholder="Primer Nombre">
+                <input type="text" id="dpi" placeholder="DPI" maxlength="13">
 
-                <input type="text" id="segundo_nombre" placeholder="Segundo Nombre">
+                <div class="form-row">
+
+                    <input type="text" id="primer_nombre" placeholder="Primer Nombre">
+
+                    <input type="text" id="segundo_nombre" placeholder="Segundo Nombre">
+
+                </div>
+
+                <div class="form-row">
+
+                    <input type="text" id="primer_apellido" placeholder="Primer Apellido">
+
+                    <input type="text" id="segundo_apellido" placeholder="Segundo Apellido">
+
+                </div>
+
+                <textarea id="direccion" placeholder="Dirección"></textarea>
+
+                <div class="form-row">
+
+                    <input type="text" id="telefono_casa" placeholder="Teléfono Casa" maxlength="8">
+
+                    <input type="text" id="telefono_movil" placeholder="Teléfono Móvil" maxlength="8">
+
+                </div>
+
+                <div class="form-row">
+
+                    <input type="number" step="0.01" id="salario_base" placeholder="Salario Base">
+
+                    <input type="number" id="bonificacion" placeholder="Bonificación">
+
+                </div>
+
+                <div class="buttons">
+
+                    <button type="submit">
+                        Guardar
+                    </button>
+
+                    <button type="button" id="btnActualizar">
+                        Actualizar
+                    </button>
+
+                    <button type="button" id="btnEliminar">
+                        Eliminar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- TABLA -->
+        <section class="table-container">
+
+            <h2>Registros</h2>
+
+            <input type="text" id="searchInput" placeholder="Buscar por DPI, nombre o apellido">
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>DPI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="empleadosTableBody">
+
+                    </tbody>
+
+                </table>
 
             </div>
 
-            <div class="form-row">
-
-                <input type="text" id="primer_apellido" placeholder="Primer Apellido">
-
-                <input type="text" id="segundo_apellido" placeholder="Segundo Apellido">
-
-            </div>
-
-            <textarea id="direccion" placeholder="Dirección"></textarea>
-
-            <div class="form-row">
-                <input type="text" id="telefono_casa" placeholder="Teléfono Casa" maxlength="8">
-
-                <input type="text" id="telefono_movil" placeholder="Teléfono Móvil" maxlength="8">
-            </div>
-
-            <div class="form-row">
-                <input type="number" step="0.01" id="salario_base" placeholder="Salario Base">
-
-                <input type="number" id="bonificacion" placeholder="Bonificación">
-            </div>
-
-            <div class="buttons">
-
-                <button type="submit">
-                    Guardar
-                </button>
-
-                <button type="button" id="btnActualizar">
-                    Actualizar
-                </button>
-
-                <button type="button" id="btnEliminar">
-                    Eliminar
-                </button>
-
-            </div>
-
-        </form>
+        </section>
 
     </section>
 
+    <script src="tabla.js"></script>
     <script src="app.js"></script>
 
 </body>

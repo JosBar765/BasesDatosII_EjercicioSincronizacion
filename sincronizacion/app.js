@@ -12,7 +12,7 @@ function toast(icon, title) {
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 2500,
+        timer: 1000,
         timerProgressBar: true,
 
         icon,
@@ -21,6 +21,91 @@ function toast(icon, title) {
     });
 
 }
+
+//
+// LIMPIAR CAMPOS
+//
+
+function limpiarCampos() {
+
+    document.getElementById("dpi").value = "";
+
+    document.getElementById("primer_nombre").value = "";
+
+    document.getElementById("segundo_nombre").value = "";
+
+    document.getElementById("primer_apellido").value = "";
+
+    document.getElementById("segundo_apellido").value = "";
+
+    document.getElementById("direccion").value = "";
+
+    document.getElementById("telefono_casa").value = "";
+
+    document.getElementById("telefono_movil").value = "";
+
+    document.getElementById("salario_base").value = "";
+
+    document.getElementById("bonificacion").value = "";
+
+}
+
+
+//
+// VALIDACIONES
+//
+
+function camposVacios(data) {
+
+    for (const key in data) {
+
+        if (String(data[key]).trim() === "") {
+            return true;
+        }
+
+    }
+
+    return false;
+
+}
+
+
+function numerosInvalidos(data) {
+
+    if (
+        Number(data.telefono_casa) < 0 ||
+        Number(data.telefono_movil) < 0 ||
+        Number(data.salario_base) < 0 ||
+        Number(data.bonificacion) < 0
+    ) {
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+
+function telefonosInvalidos(data) {
+
+    const regex = /^[0-9]{8}$/;
+
+    return (
+        !regex.test(data.telefono_casa) ||
+        !regex.test(data.telefono_movil)
+    );
+
+}
+
+
+function dpiInvalido(dpi) {
+
+    return !/^[0-9]{13}$/.test(dpi);
+
+}
+
 
 
 //
@@ -51,6 +136,7 @@ function setConnection(name) {
 }
 
 
+
 //
 // CONEXIONES
 //
@@ -61,20 +147,36 @@ document.getElementById("btnMysql").addEventListener("click", async () => {
 
         const response = await fetch("backend/conexion/mysql.php");
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
 
             setConnection("mysql");
 
+            cargarEmpleados();
+            limpiarCampos();
+
             toast(
                 "success",
-                "Conexión exitosa a MySQL"
+                result.message
+            );
+
+        } else {
+
+            toast(
+                "error",
+                result.message
             );
 
         }
 
     } catch (error) {
+
+        console.error(error);
 
         toast(
             "error",
@@ -93,20 +195,36 @@ document.getElementById("btnPostgres").addEventListener("click", async () => {
 
         const response = await fetch("backend/conexion/postgres.php");
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
 
             setConnection("postgres");
 
+            cargarEmpleados();
+            limpiarCampos();
+
             toast(
                 "success",
-                "Conexión exitosa a PostgreSQL"
+                result.message
+            );
+
+        } else {
+
+            toast(
+                "error",
+                result.message
             );
 
         }
 
     } catch (error) {
+
+        console.error(error);
 
         toast(
             "error",
@@ -129,7 +247,11 @@ document.getElementById("btnSync").addEventListener("click", async () => {
 
         const response = await fetch("backend/sync/sincronizar.php");
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
 
@@ -138,9 +260,21 @@ document.getElementById("btnSync").addEventListener("click", async () => {
                 "Bases de datos sincronizadas"
             );
 
+            cargarEmpleados();
+            limpiarCampos();
+
+        } else {
+
+            toast(
+                "error",
+                result.message
+            );
+
         }
 
     } catch (error) {
+
+        console.error(error);
 
         toast(
             "error",
@@ -176,6 +310,50 @@ document.getElementById("empleadoForm").addEventListener("submit", async (e) => 
 
     };
 
+    if (camposVacios(data)) {
+
+        toast(
+            "warning",
+            "Todos los campos son obligatorios"
+        );
+
+        return;
+
+    }
+
+    if (dpiInvalido(data.dpi)) {
+
+        toast(
+            "warning",
+            "El DPI debe tener 13 dígitos"
+        );
+
+        return;
+
+    }
+
+    if (numerosInvalidos(data)) {
+
+        toast(
+            "warning",
+            "No se permiten números negativos"
+        );
+
+        return;
+
+    }
+
+    if (telefonosInvalidos(data)) {
+
+        toast(
+            "warning",
+            "Los teléfonos deben tener 8 dígitos"
+        );
+
+        return;
+
+    }
+
     try {
 
         const response = await fetch("backend/accion/insertar.php", {
@@ -190,25 +368,38 @@ document.getElementById("empleadoForm").addEventListener("submit", async (e) => 
 
         });
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
+            cargarEmpleados();
+            limpiarCampos();
 
             toast(
                 "success",
-                "Empleado insertado y bitácora actualizada"
+                result.message
+            );
+
+        } else {
+
+            toast(
+                "error",
+                result.message
             );
 
         }
 
     } catch (error) {
 
+        console.error(error);
+
         toast(
             "error",
             "Error al insertar"
         );
-
-        console.error(error);
 
     }
 
@@ -237,6 +428,50 @@ document.getElementById("btnActualizar").addEventListener("click", async () => {
 
     };
 
+    if (camposVacios(data)) {
+
+        toast(
+            "warning",
+            "Todos los campos son obligatorios"
+        );
+
+        return;
+
+    }
+
+    if (dpiInvalido(data.dpi)) {
+
+        toast(
+            "warning",
+            "El DPI debe tener 13 dígitos"
+        );
+
+        return;
+
+    }
+
+    if (numerosInvalidos(data)) {
+
+        toast(
+            "warning",
+            "No se permiten números negativos"
+        );
+
+        return;
+
+    }
+
+    if (telefonosInvalidos(data)) {
+
+        toast(
+            "warning",
+            "Los teléfonos deben tener 8 dígitos"
+        );
+
+        return;
+
+    }
+
     try {
 
         const response = await fetch("backend/accion/actualizar.php", {
@@ -251,18 +486,33 @@ document.getElementById("btnActualizar").addEventListener("click", async () => {
 
         });
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
-
+            limpiarCampos();
             toast(
                 "success",
-                "Empleado actualizado y bitácora actualizada"
+                result.message
+            );
+
+            cargarEmpleados();
+
+        } else {
+
+            toast(
+                "error",
+                result.message
             );
 
         }
 
     } catch (error) {
+
+        console.error(error);
 
         toast(
             "error",
@@ -283,6 +533,28 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
 
     const dpi = document.getElementById("dpi").value;
 
+    if (dpi.trim() === "") {
+
+        toast(
+            "warning",
+            "Debe ingresar un DPI"
+        );
+
+        return;
+
+    }
+
+    if (dpiInvalido(dpi)) {
+
+        toast(
+            "warning",
+            "El DPI debe tener 13 dígitos"
+        );
+
+        return;
+
+    }
+
     try {
 
         const response = await fetch("backend/accion/eliminar.php", {
@@ -297,18 +569,34 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
 
         });
 
-        const result = await response.json();
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
 
         if (result.success) {
 
             toast(
                 "success",
-                "Empleado eliminado y bitácora actualizada"
+                result.message
+            );
+
+            cargarEmpleados();
+            limpiarCampos();
+
+        } else {
+
+            toast(
+                "error",
+                result.message
             );
 
         }
 
     } catch (error) {
+
+        console.error(error);
 
         toast(
             "error",
@@ -316,5 +604,17 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
         );
 
     }
+
+});
+
+//
+// DESCONECTAR AL RECARGAR
+//
+
+window.addEventListener("beforeunload", () => {
+
+    navigator.sendBeacon(
+        "backend/conexion/desconectar.php"
+    );
 
 });

@@ -1,67 +1,100 @@
 <?php
 
-session_start();
+date_default_timezone_set("America/Guatemala");
 
-require_once("../config/mysql.php");
-require_once("../config/postgres.php");
-require_once("../bitacora/bitacora.php");
+header("Content-Type: application/json");
 
-$data = json_decode(file_get_contents("php://input"), true);
-
-$conexion = $_SESSION["conexion_actual"] ?? null;
-
-if (!$conexion) {
-
-    echo json_encode([
-        "success" => false
-    ]);
-
-    exit;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-$db = ($conexion === "mysql")
-    ? mysqlConnection()
-    : postgresConnection();
+require_once("../conexion/database.php");
+require_once("../bitacora/bitacora.php");
 
-$sql = "
-UPDATE Empleado
-SET
-    primer_nombre = :primer_nombre,
-    segundo_nombre = :segundo_nombre,
-    primer_apellido = :primer_apellido,
-    segundo_apellido = :segundo_apellido,
-    direccion = :direccion,
-    telefono_casa = :telefono_casa,
-    telefono_movil = :telefono_movil,
-    salario_base = :salario_base,
-    bonificacion = :bonificacion,
-    fecha_modificacion = NOW()
-WHERE dpi = :dpi
-";
+try {
 
-$stmt = $db->prepare($sql);
+    $data = json_decode(
+        file_get_contents("php://input"),
+        true
+    );
 
-$stmt->execute([
+    if ($data === null) {
 
-    ":dpi" => $data["dpi"],
-    ":primer_nombre" => $data["primer_nombre"],
-    ":segundo_nombre" => $data["segundo_nombre"],
-    ":primer_apellido" => $data["primer_apellido"],
-    ":segundo_apellido" => $data["segundo_apellido"],
-    ":direccion" => $data["direccion"],
-    ":telefono_casa" => $data["telefono_casa"],
-    ":telefono_movil" => $data["telefono_movil"],
-    ":salario_base" => $data["salario_base"],
-    ":bonificacion" => $data["bonificacion"]
+        echo json_encode([
+            "success" => false,
+            "message" => "JSON inválido"
+        ]);
 
-]);
+        exit;
+    }
 
-escribirBitacora(
-    "UPDATE|" .
-        $data["dpi"] . "|" .
-        date("Y-m-d H:i:s")
-);
+    $conexion = $_SESSION["conexion_actual"] ?? null;
 
-echo json_encode([
-    "success" => true
-]);
+    if (!$conexion) {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "No hay conexión activa"
+        ]);
+
+        exit;
+    }
+
+    $db = ($conexion === "mysql")
+        ? mysqlConnection()
+        : postgresConnection();
+
+    $nombre_tabla = ($conexion === "mysql")
+        ? "Empleado"
+        : '"Empleado"';
+
+    $sql = "
+    UPDATE $nombre_tabla
+    SET
+        primer_nombre = :primer_nombre,
+        segundo_nombre = :segundo_nombre,
+        primer_apellido = :primer_apellido,
+        segundo_apellido = :segundo_apellido,
+        direccion = :direccion,
+        telefono_casa = :telefono_casa,
+        telefono_movil = :telefono_movil,
+        salario_base = :salario_base,
+        bonificacion = :bonificacion,
+        fecha_modificacion = NOW()
+    WHERE dpi = :dpi
+    ";
+
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+
+        ":dpi" => $data["dpi"],
+        ":primer_nombre" => $data["primer_nombre"],
+        ":segundo_nombre" => $data["segundo_nombre"],
+        ":primer_apellido" => $data["primer_apellido"],
+        ":segundo_apellido" => $data["segundo_apellido"],
+        ":direccion" => $data["direccion"],
+        ":telefono_casa" => $data["telefono_casa"],
+        ":telefono_movil" => $data["telefono_movil"],
+        ":salario_base" => $data["salario_base"],
+        ":bonificacion" => $data["bonificacion"]
+
+    ]);
+
+    escribirBitacora(
+        "UPDATE|" .
+            $data["dpi"] . "|" .
+            date("Y-m-d H:i:s")
+    );
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Empleado actualizado"
+    ]);
+} catch (PDOException $e) {
+
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
+    ]);
+}

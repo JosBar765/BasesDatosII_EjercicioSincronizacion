@@ -1,173 +1,220 @@
 <?php
 
-require_once("../config/mysql.php");
-require_once("../config/postgres.php");
+date_default_timezone_set("America/Guatemala");
 
-$mysql = mysqlConnection();
-$postgres = postgresConnection();
+header("Content-Type: application/json");
 
-$mysqlData = $mysql
-    ->query("SELECT * FROM Empleado")
-    ->fetchAll(PDO::FETCH_ASSOC);
+require_once("../conexion/database.php");
 
-$postgresData = $postgres
-    ->query("SELECT * FROM Empleado")
-    ->fetchAll(PDO::FETCH_ASSOC);
+try {
 
-$mysqlMap = [];
-$postgresMap = [];
+    $mysql = mysqlConnection();
+    $postgres = postgresConnection();
 
-foreach ($mysqlData as $row) {
-    $mysqlMap[$row["dpi"]] = $row;
-}
+    $tablaMysql = "Empleado";
+    $tablaPostgres = '"Empleado"';
 
-foreach ($postgresData as $row) {
-    $postgresMap[$row["dpi"]] = $row;
-}
+    //
+    // OBTENER DATOS
+    //
 
-foreach ($mysqlMap as $dpi => $mysqlRow) {
+    $mysqlData = $mysql
+        ->query("SELECT * FROM $tablaMysql")
+        ->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!isset($postgresMap[$dpi])) {
+    $postgresData = $postgres
+        ->query("SELECT * FROM $tablaPostgres")
+        ->fetchAll(PDO::FETCH_ASSOC);
 
-        $sql = "
-        INSERT INTO Empleado (
-            dpi,
-            primer_nombre,
-            segundo_nombre,
-            primer_apellido,
-            segundo_apellido,
-            direccion,
-            telefono_casa,
-            telefono_movil,
-            salario_base,
-            bonificacion,
-            fecha_modificacion,
-            eliminado
-        )
-        VALUES (
-            :dpi,
-            :primer_nombre,
-            :segundo_nombre,
-            :primer_apellido,
-            :segundo_apellido,
-            :direccion,
-            :telefono_casa,
-            :telefono_movil,
-            :salario_base,
-            :bonificacion,
-            :fecha_modificacion,
-            :eliminado
-        )
-        ";
+    //
+    // MAPAS
+    //
 
-        $stmt = $postgres->prepare($sql);
+    $mysqlMap = [];
+    $postgresMap = [];
 
-        $stmt->execute($mysqlRow);
-    } else {
+    foreach ($mysqlData as $row) {
+        $mysqlMap[$row["dpi"]] = $row;
+    }
 
-        $postgresRow = $postgresMap[$dpi];
+    foreach ($postgresData as $row) {
+        $postgresMap[$row["dpi"]] = $row;
+    }
 
-        if (
-            strtotime($mysqlRow["fecha_modificacion"]) >
-            strtotime($postgresRow["fecha_modificacion"])
-        ) {
+    //
+    // MYSQL -> POSTGRES
+    //
+
+    foreach ($mysqlMap as $dpi => $mysqlRow) {
+
+        //
+        // INSERTAR EN POSTGRES
+        //
+
+        if (!isset($postgresMap[$dpi])) {
 
             $sql = "
-            UPDATE Empleado
-            SET
-                primer_nombre = :primer_nombre,
-                segundo_nombre = :segundo_nombre,
-                primer_apellido = :primer_apellido,
-                segundo_apellido = :segundo_apellido,
-                direccion = :direccion,
-                telefono_casa = :telefono_casa,
-                telefono_movil = :telefono_movil,
-                salario_base = :salario_base,
-                bonificacion = :bonificacion,
-                fecha_modificacion = :fecha_modificacion,
-                eliminado = :eliminado
-            WHERE dpi = :dpi
+            INSERT INTO $tablaPostgres (
+                dpi,
+                primer_nombre,
+                segundo_nombre,
+                primer_apellido,
+                segundo_apellido,
+                direccion,
+                telefono_casa,
+                telefono_movil,
+                salario_base,
+                bonificacion,
+                fecha_modificacion,
+                eliminado
+            )
+            VALUES (
+                :dpi,
+                :primer_nombre,
+                :segundo_nombre,
+                :primer_apellido,
+                :segundo_apellido,
+                :direccion,
+                :telefono_casa,
+                :telefono_movil,
+                :salario_base,
+                :bonificacion,
+                :fecha_modificacion,
+                :eliminado
+            )
             ";
 
             $stmt = $postgres->prepare($sql);
 
             $stmt->execute($mysqlRow);
+        } else {
+
+            //
+            // ACTUALIZAR SI MYSQL ES MÁS RECIENTE
+            //
+
+            $postgresRow = $postgresMap[$dpi];
+
+            if (
+                strtotime($mysqlRow["fecha_modificacion"]) >
+                strtotime($postgresRow["fecha_modificacion"])
+            ) {
+
+                $sql = "
+                UPDATE $tablaPostgres
+                SET
+                    primer_nombre = :primer_nombre,
+                    segundo_nombre = :segundo_nombre,
+                    primer_apellido = :primer_apellido,
+                    segundo_apellido = :segundo_apellido,
+                    direccion = :direccion,
+                    telefono_casa = :telefono_casa,
+                    telefono_movil = :telefono_movil,
+                    salario_base = :salario_base,
+                    bonificacion = :bonificacion,
+                    fecha_modificacion = :fecha_modificacion,
+                    eliminado = :eliminado
+                WHERE dpi = :dpi
+                ";
+
+                $stmt = $postgres->prepare($sql);
+
+                $stmt->execute($mysqlRow);
+            }
         }
     }
-}
 
-foreach ($postgresMap as $dpi => $postgresRow) {
+    //
+    // POSTGRES -> MYSQL
+    //
 
-    if (!isset($mysqlMap[$dpi])) {
+    foreach ($postgresMap as $dpi => $postgresRow) {
 
-        $sql = "
-        INSERT INTO Empleado (
-            dpi,
-            primer_nombre,
-            segundo_nombre,
-            primer_apellido,
-            segundo_apellido,
-            direccion,
-            telefono_casa,
-            telefono_movil,
-            salario_base,
-            bonificacion,
-            fecha_modificacion,
-            eliminado
-        )
-        VALUES (
-            :dpi,
-            :primer_nombre,
-            :segundo_nombre,
-            :primer_apellido,
-            :segundo_apellido,
-            :direccion,
-            :telefono_casa,
-            :telefono_movil,
-            :salario_base,
-            :bonificacion,
-            :fecha_modificacion,
-            :eliminado
-        )
-        ";
+        //
+        // INSERTAR EN MYSQL
+        //
 
-        $stmt = $mysql->prepare($sql);
-
-        $stmt->execute($postgresRow);
-    } else {
-
-        $mysqlRow = $mysqlMap[$dpi];
-
-        if (
-            strtotime($postgresRow["fecha_modificacion"]) >
-            strtotime($mysqlRow["fecha_modificacion"])
-        ) {
+        if (!isset($mysqlMap[$dpi])) {
 
             $sql = "
-            UPDATE Empleado
-            SET
-                primer_nombre = :primer_nombre,
-                segundo_nombre = :segundo_nombre,
-                primer_apellido = :primer_apellido,
-                segundo_apellido = :segundo_apellido,
-                direccion = :direccion,
-                telefono_casa = :telefono_casa,
-                telefono_movil = :telefono_movil,
-                salario_base = :salario_base,
-                bonificacion = :bonificacion,
-                fecha_modificacion = :fecha_modificacion,
-                eliminado = :eliminado
-            WHERE dpi = :dpi
+            INSERT INTO $tablaMysql (
+                dpi,
+                primer_nombre,
+                segundo_nombre,
+                primer_apellido,
+                segundo_apellido,
+                direccion,
+                telefono_casa,
+                telefono_movil,
+                salario_base,
+                bonificacion,
+                fecha_modificacion,
+                eliminado
+            )
+            VALUES (
+                :dpi,
+                :primer_nombre,
+                :segundo_nombre,
+                :primer_apellido,
+                :segundo_apellido,
+                :direccion,
+                :telefono_casa,
+                :telefono_movil,
+                :salario_base,
+                :bonificacion,
+                :fecha_modificacion,
+                :eliminado
+            )
             ";
 
             $stmt = $mysql->prepare($sql);
 
             $stmt->execute($postgresRow);
+        } else {
+
+            //
+            // ACTUALIZAR SI POSTGRES ES MÁS RECIENTE
+            //
+
+            $mysqlRow = $mysqlMap[$dpi];
+
+            if (
+                strtotime($postgresRow["fecha_modificacion"]) >
+                strtotime($mysqlRow["fecha_modificacion"])
+            ) {
+
+                $sql = "
+                UPDATE $tablaMysql
+                SET
+                    primer_nombre = :primer_nombre,
+                    segundo_nombre = :segundo_nombre,
+                    primer_apellido = :primer_apellido,
+                    segundo_apellido = :segundo_apellido,
+                    direccion = :direccion,
+                    telefono_casa = :telefono_casa,
+                    telefono_movil = :telefono_movil,
+                    salario_base = :salario_base,
+                    bonificacion = :bonificacion,
+                    fecha_modificacion = :fecha_modificacion,
+                    eliminado = :eliminado
+                WHERE dpi = :dpi
+                ";
+
+                $stmt = $mysql->prepare($sql);
+
+                $stmt->execute($postgresRow);
+            }
         }
     }
-}
 
-echo json_encode([
-    "success" => true,
-    "message" => "Sincronización completada"
-]);
+    echo json_encode([
+        "success" => true,
+        "message" => "Sincronización completada"
+    ]);
+} catch (PDOException $e) {
+
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
+    ]);
+}
