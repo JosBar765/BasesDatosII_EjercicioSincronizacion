@@ -209,11 +209,11 @@ button[type="submit"]:hover {
 }
 
 .connection-badge.mysql {
-    background: #2563eb;
+    background: #07eeff;
 }
 
 .connection-badge.postgres {
-    background: #0f766e;
+    background: #04f118;
 }
 
 .form-row {
