@@ -19,7 +19,15 @@ async function cargarEmpleados() {
 
         const result = await response.json();
 
-        empleados = result.data;
+        if (!result.success) {
+
+            toast("warning", result.message);
+
+            return;
+
+        }
+
+        empleados = result.data || [];
 
         renderTabla(empleados);
 
