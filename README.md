@@ -63,7 +63,7 @@ Colocar el proyecto dentro de la carpeta del servidor web.
 Ejemplo en XAMPP:
 
 ```bash
-C:\xampp\htdocs\sincronizacion-db
+C:\xampp\htdocs\sincronizacion
 ```
 
 ---
@@ -93,64 +93,7 @@ DB_1
 # Crear tabla Empleado
 
 La tabla debe existir en ambas bases de datos con la misma estructura.
-
-## Script para MySQL
-
-```sql
-CREATE TABLE Empleado (
-
-    dpi VARCHAR(13) PRIMARY KEY,
-
-    primer_nombre VARCHAR(100) NOT NULL,
-    segundo_nombre VARCHAR(100) NOT NULL,
-
-    primer_apellido VARCHAR(100) NOT NULL,
-    segundo_apellido VARCHAR(100) NOT NULL,
-
-    direccion TEXT NOT NULL,
-
-    telefono_casa VARCHAR(8) NOT NULL,
-    telefono_movil VARCHAR(8) NOT NULL,
-
-    salario_base DECIMAL(10,2) NOT NULL,
-    bonificacion DECIMAL(10,2) NOT NULL,
-
-    fecha_modificacion TIMESTAMP NOT NULL,
-
-    eliminado BOOLEAN NOT NULL DEFAULT FALSE
-
-);
-```
-
----
-
-## Script para PostgreSQL
-
-```sql
-CREATE TABLE "Empleado" (
-
-    dpi VARCHAR(13) PRIMARY KEY,
-
-    primer_nombre VARCHAR(100) NOT NULL,
-    segundo_nombre VARCHAR(100) NOT NULL,
-
-    primer_apellido VARCHAR(100) NOT NULL,
-    segundo_apellido VARCHAR(100) NOT NULL,
-
-    direccion TEXT NOT NULL,
-
-    telefono_casa VARCHAR(8) NOT NULL,
-    telefono_movil VARCHAR(8) NOT NULL,
-
-    salario_base NUMERIC(10,2) NOT NULL,
-    bonificacion NUMERIC(10,2) NOT NULL,
-
-    fecha_modificacion TIMESTAMP NOT NULL,
-
-    eliminado BOOLEAN NOT NULL DEFAULT FALSE
-
-);
-```
+Ambos scripts se encuentran dentro de la carpeta `database-scripts/` del repositorio.
 
 ---
 
@@ -189,7 +132,8 @@ $PASSWORD = "postgre";
 
 # Habilitar extensiones de PHP
 
-Es necesario habilitar las extensiones PDO para MySQL y PostgreSQL.
+Es necesario habilitar las extensiones PDO para MySQL y PostgreSQL dentro de la configuración de XAMPP.
+Primero, hay que ubicarse en el disco local (C:/) y entrar a la carpeta `xampp/`. Luego, entrar a la carpeta `php/`. Y por último, seguir lo siguiente pasos:
 
 Abrir el archivo:
 
@@ -219,7 +163,7 @@ Iniciar:
 Después abrir en el navegador:
 
 ```bash
-http://localhost/sincronizacion-db
+http://localhost/sincronizacion
 ```
 
 ---
@@ -321,4 +265,4 @@ extension=pdo_pgsql
 
 # Autor
 
-Desarrollado por Josué Abraham Barrios Ramírez.
+Desarrollado por Josué Abraham Barrios Ramírez 090-23-4777.
