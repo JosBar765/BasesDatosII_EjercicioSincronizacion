@@ -54,15 +54,22 @@ function renderTabla(data) {
 
         tr.innerHTML = `
 
-            <td>${emp.dpi}</td>
-            <td>${emp.primer_nombre}</td>
-            <td>${emp.primer_apellido}</td>
+        <td>${emp.dpi}</td>
 
-        `;
+        <td>${emp.primer_nombre}</td>
+
+        <td>${emp.primer_apellido}</td>
+
+        <td>${emp.telefono_movil}</td>
+
+        <td>Q${emp.salario_base}</td>
+
+    `;
 
         tr.addEventListener("click", () => {
 
             document.getElementById("dpi").value = emp.dpi;
+            document.getElementById("dpi").disabled = true;
 
             document.getElementById("primer_nombre").value = emp.primer_nombre;
 
