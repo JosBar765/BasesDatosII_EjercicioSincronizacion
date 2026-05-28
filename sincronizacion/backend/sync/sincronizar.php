@@ -6,10 +6,16 @@ header("Content-Type: application/json");
 
 require_once("../conexion/database.php");
 
+$mysql = null;
+$postgres = null;
+
 try {
 
     $mysql = mysqlConnection();
     $postgres = postgresConnection();
+
+    $mysql->beginTransaction();
+    $postgres->beginTransaction();
 
     $tablaMysql = "Empleado";
     $tablaPostgres = '"Empleado"';
@@ -280,11 +286,22 @@ try {
         }
     }
 
+    $mysql->commit();
+    $postgres->commit();
+
     echo json_encode([
         "success" => true,
         "message" => "Sincronización completada"
     ]);
 } catch (PDOException $e) {
+
+    if ($mysql && $mysql->inTransaction()) {
+        $mysql->rollBack();
+    }
+
+    if ($postgres && $postgres->inTransaction()) {
+        $postgres->rollBack();
+    }
 
     echo json_encode([
         "success" => false,
