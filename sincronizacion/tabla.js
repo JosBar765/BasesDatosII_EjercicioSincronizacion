@@ -52,17 +52,20 @@ function renderTabla(data) {
 
         const tr = document.createElement("tr");
 
+        const gtFormatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'GTQ'
+        });
+
         tr.innerHTML = `
 
         <td>${emp.dpi}</td>
 
-        <td>${emp.primer_nombre} ${emp.segundo_nombre}</td>
-
-        <td>${emp.primer_apellido} ${emp.segundo_apellido}</td>
+        <td>${emp.primer_nombre} ${emp.segundo_nombre} ${emp.primer_apellido} ${emp.segundo_apellido}</td>
 
         <td>${emp.telefono_movil}</td>
 
-        <td>Q${emp.salario_base}</td>
+        <td>${gtFormatter.format(emp.salario_base)}</td>
 
     `;
 
