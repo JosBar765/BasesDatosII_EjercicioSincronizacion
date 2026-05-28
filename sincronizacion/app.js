@@ -29,6 +29,7 @@ function toast(icon, title) {
 function limpiarCampos() {
 
     document.getElementById("dpi").value = "";
+    document.getElementById("dpi").disabled = false;
 
     document.getElementById("primer_nombre").value = "";
 
@@ -619,6 +620,10 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
 
     }
 
+});
+
+document.getElementById("btnLimpiar").addEventListener("click", () => {
+    limpiarCampos();
 });
 
 //

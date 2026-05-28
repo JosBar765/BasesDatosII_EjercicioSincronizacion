@@ -182,6 +182,22 @@ button[type="submit"]:hover {
     background: #b91c1c;
 }
 
+#btnLimpiar {
+    background: #1178d2;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+#btnLimpiar:hover {
+    background: #1668af;
+}
+
 @media (max-width: 768px) {
 
     body {
