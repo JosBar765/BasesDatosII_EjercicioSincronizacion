@@ -48,7 +48,7 @@ try {
             eliminado
         FROM $nombre_tabla
         WHERE eliminado = false
-        ORDER BY fecha_modificacion DESC
+        ORDER BY primer_nomre ASC
     ";
 
     $stmt = $db->prepare($sql);
