@@ -56,9 +56,9 @@ function renderTabla(data) {
 
         <td>${emp.dpi}</td>
 
-        <td>${emp.primer_nombre}</td>
+        <td>${emp.primer_nombre} ${emp.segundo_nombre}</td>
 
-        <td>${emp.primer_apellido}</td>
+        <td>${emp.primer_apellido} ${emp.segundo_apellido}</td>
 
         <td>${emp.telefono_movil}</td>
 
