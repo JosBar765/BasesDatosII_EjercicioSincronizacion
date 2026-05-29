@@ -1,6 +1,7 @@
 # Sincronización de Bases de Datos MySQL y PostgreSQL
 
 Sistema web desarrollado en PHP y JavaScript para la sincronización bidireccional de registros entre una base de datos MySQL y PostgreSQL.
+Realizado por Josué Abraham Barrios Ramírez 090-23-4777.
 
 El sistema permite:
 
@@ -165,9 +166,5 @@ Después abrir en el navegador:
 ```bash
 http://localhost/sincronizacion
 ```
-
----
-
-# Autor
 
 Desarrollado por Josué Abraham Barrios Ramírez 090-23-4777.
